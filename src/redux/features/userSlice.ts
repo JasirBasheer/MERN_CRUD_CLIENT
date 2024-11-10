@@ -1,22 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import Cookies from 'js-cookie';
+import { UserPayload, UserState } from "../../types/userTypes";
 
-interface UserState {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  image: string;
-  token: string | null;
-}
-
-export interface UserPayload {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  image: string;
-}
 
 const initialState: UserState = {
   id: "",

@@ -3,27 +3,25 @@ import { useDispatch, useSelector } from "react-redux"
 import avatar from '../../assets/avatar.jpeg'
 import axios from '../../utils/axios';
 import { message } from "antd";
-import { setUser, UserPayload } from "../../redux/features/userSlice";
+import { setUser } from "../../redux/features/userSlice";
+import { RootState, UserPayload } from "../../types/userTypes";
 
+const EditProfile:React.FC = () => {
+  const user = useSelector((state: RootState) => state?.user)
 
-
-const EditProfile = () => {
-  const user = useSelector((state: any) => state.user)
-  console.log(user);
-
-  const [firstName, setFirstName] = useState(user.firstName)
-  const [lastName, setLastName] = useState(user.lastName)
-  const [email, setEmail] = useState(user.email)
-  const [image, setImage] = useState(user.image || '')
+  const [firstName, setFirstName] = useState<string>(user.firstName || '')
+  const [lastName, setLastName] = useState<string>(user.lastName || '')
+  const [email, setEmail] = useState<string>(user.email || '')
+  const [image, setImage] = useState<string>(user.image || '')
   const dispatch = useDispatch()
 
-  const HandleChangeImage = (e: any) => {
-    const file = e.target.files[0];
+  const HandleChangeImage = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const file = e.target.files ? e.target.files[0] : null;
     if (file && file.type.startsWith('image')) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
-        setImage(reader.result);
+        setImage(reader.result as string);
       };
       reader.onerror = (err) => console.error('Error reading file', err);
     } else {
@@ -31,59 +29,29 @@ const EditProfile = () => {
     }
   };
 
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    axios.patch('/edit-profile', {
-      id: user.id,
-      firstName,
-      lastName,
-      email,
-      image,
-    }).then(response => {
-
-
+    axios.patch('/edit-profile', {id: user.id,firstName,lastName,email,image,}).then(response => {
       if (response.status === 200) {
-
-
-        const userData: UserPayload = {
-          id: user.id,
-          firstName,
-          lastName,
-          email,
-          image,
-        };
-
+        const userData: UserPayload = { id: user.id,firstName,lastName,email,image};
         dispatch(setUser(userData));
-
-
         message.success("Profile updated successfully");
       }
     }).catch((error: any) => {
       if (error.response?.status === 400) {
-        return message.error("User already exists");
-
+        return message.error(`${error.response.data.error}`);
       } else {
         console.error(error.message);
-
       }
     })
-
   };
-
-
 
   return (
     <div className=' w-full h-screen sm:pt-20 flex items-center justify-center bg-[rgb(97,92,116)]'>
-
       <div className="bg-[rgb(43,39,56)] sm:w-[25rem] flex items-center sm:h-[32rem] w-full h-full rounded-md p-5 shadow-2xl relative">
         <div>
-
         </div>
-
         <form onSubmit={handleSubmit} className="flex flex-col items-center py-[2rem] w-full">
-
           <div className="flex items-center justify-center mb-4">
             <label htmlFor="image-upload" className="cursor-pointer">
               <img
@@ -99,7 +67,6 @@ const EditProfile = () => {
               onChange={HandleChangeImage}
             />
           </div>
-
           <input
             type="text"
             value={firstName}
@@ -128,7 +95,6 @@ const EditProfile = () => {
         </form>
       </div>
     </div>
-
   )
 }
 

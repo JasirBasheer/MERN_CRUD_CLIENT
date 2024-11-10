@@ -7,13 +7,3 @@
     padding: 0;
     box-sizing: border-box;
 }
-
-@layer components {
-    /* Custom carousel indicator styles */
-    .custom-carousel .carousel-indicators button {
-      width: 16px;            /* Adjust width */
-      height: 8px;            /* Adjust height */
-      border-radius: 4px;     /* Adjust border-radius */
-    }
-  }
-  

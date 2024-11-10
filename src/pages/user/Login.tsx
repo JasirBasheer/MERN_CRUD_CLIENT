@@ -3,7 +3,7 @@ import LoginForm from '../../components/user/LoginForm';
 import { useEffect } from 'react';
 import Cookies from 'js-cookie';
 
-const Login = () => {
+const Login:React.FC = () => {
   const token = Cookies.get('accessToken');
   const navigate = useNavigate();
 
@@ -11,7 +11,7 @@ const Login = () => {
     if (token) {
       navigate('/');
     }
-  }, [token, navigate]); 
+  }, [token, navigate]);
 
   return !token && <LoginForm />;
 };

@@ -1,9 +1,9 @@
 import TableComponent from "../../components/admin/TableComponent"
 
-const Dashboard = () => {
+const Dashboard: React.FC = () => {
   return (
     <>
-    <TableComponent/>
+      <TableComponent />
     </>
   )
 }

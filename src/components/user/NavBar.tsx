@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom"
 import Cookies from 'js-cookie';
 import { message } from "antd";
 
-const NavBar = () => {
+const NavBar:React.FC = () => {
   const navigate = useNavigate()
   const handleLogout =()=>{
     Cookies.remove('accessToken');

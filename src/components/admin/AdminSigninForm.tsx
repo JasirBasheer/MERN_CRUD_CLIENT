@@ -1,16 +1,17 @@
 import React, { useRef, useState } from 'react';
 import axios from '../../utils/axios';
 import Cookies from 'js-cookie';
-import { NavigateFunction, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import { message } from "antd";
 import { validateEmail, validatePassword } from '../../utils/validations';
 import { SpinnerCircular } from 'spinners-react';
 
 
 const AdminSigninForm: React.FC = () => {
+
   const [email, setEmail] = useState<string>('admin@gmail.com');
   const [password, setPassword] = useState<string>('admin@123');
-  const navigate: NavigateFunction = useNavigate();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const emailRef = useRef<HTMLInputElement>(null);
@@ -34,7 +35,7 @@ const AdminSigninForm: React.FC = () => {
       Cookies.set('AdminAccessToken', response.data.AdminAccessToken, { path: '/', sameSite: 'None', secure: true });
       setIsLoading(false)
       message.success('Successfully authenticated')
-      navigate('/admin/dashboard')
+      navigate('/admin/')
     } catch (error: any) {
       if (error?.response && error.response?.status === 400) {
         setIsLoading(false)

@@ -1,11 +1,11 @@
 import Dashboard from '../../components/user/Dashboard'
 import NavBar from '../../components/user/NavBar'
 
-const Home = () => {
+const Home:React.FC = () => {
   return (
     <>
-        <NavBar/>
-        <Dashboard/>
+      <NavBar />
+      <Dashboard />
     </>
   )
 }

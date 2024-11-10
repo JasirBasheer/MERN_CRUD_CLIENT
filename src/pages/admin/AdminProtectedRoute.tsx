@@ -1,24 +1,21 @@
 import Cookies from 'js-cookie';
-import { ReactNode, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import axios from '../../utils/axios';
 import { ScaleLoader } from 'react-spinners';
-
-interface AdminProtectedRouteProps {
-  children: ReactNode;
-}
+import { AdminProtectedRouteProps } from '../../types/adminTypes';
 
 const AdminProtectedRoute: React.FC<AdminProtectedRouteProps> = ({ children }) => {
   const [isVerified, setIsVerified] = useState<boolean | null>(null);
   const token = Cookies.get('AdminAccessToken') || null
 
   useEffect(() => {
-    if (!token) {    
+    if (!token) {
       setIsVerified(false);
       return;
     }
 
-    const verifyToken = async () => {
+    const verifyToken = async (): Promise<void> => {
       try {
         const response = await axios.post('/admin/verify-token', {},
           {
@@ -27,11 +24,7 @@ const AdminProtectedRoute: React.FC<AdminProtectedRouteProps> = ({ children }) =
           }
         );
         setIsVerified(response.status === 200);
-        if (response.status === 200) {
-          console.log(response.data);
-        }
       } catch (error: any) {
-                
         Cookies.remove('AdminAccessToken');
         Cookies.remove('AdminRefreshToken');
         setIsVerified(false);
@@ -43,9 +36,8 @@ const AdminProtectedRoute: React.FC<AdminProtectedRouteProps> = ({ children }) =
   if (isVerified === null) {
     return (
       <div className='w-full h-screen flex items-center justify-center'>
-      <ScaleLoader />
-
-    </div>
+        <ScaleLoader />
+      </div>
     )
   }
 

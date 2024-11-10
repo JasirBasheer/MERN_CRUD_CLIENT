@@ -2,15 +2,17 @@ import { HiUserAdd } from "react-icons/hi"
 import avatar from '../../assets/avatar.jpeg'
 import { MdBlock, MdDelete, MdOutlineModeEditOutline } from "react-icons/md"
 import { IoIosSearch } from "react-icons/io"
-import { useEffect, useState } from "react"
+import React, { Suspense, useEffect, useState } from "react"
 import axios from '../../utils/axios';
-import EditUser from "./EditUser"
-import CreateUser from "./CreateUser"
 import { IoLogOut } from "react-icons/io5"
 import Cookies from 'js-cookie';
 import { useNavigate } from "react-router-dom"
 import { message } from "antd"
 import { UserType } from "../../types/adminTypes"
+import { ScaleLoader } from "react-spinners"
+
+const EditUser = React.lazy(() => import('./EditUser'));
+const CreateUser = React.lazy(() => import('./CreateUser'));
 
 const TableComponent: React.FC = () => {
   const [users, setUsers] = useState<UserType[]>([]);
@@ -19,7 +21,7 @@ const TableComponent: React.FC = () => {
   const [isCreateUserClicked, setIsCreateUserClicked] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [user, setUser] = useState<UserType>({} as UserType)
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
@@ -95,9 +97,9 @@ const TableComponent: React.FC = () => {
           <div className="w-full grid grid-cols-9 h-auto ">
             {
               filteredUsers?.length > 0 ? (
-                filteredUsers.map((user: any) => {
+                filteredUsers.map((user: UserType, i) => {
                   return (
-                    <div className="sm:col-span-3 col-span-12 mb-8 mr-4 rounded-md shadow-lg h-[21rem] bg-[#fff]" key={user.id}>
+                    <div className="sm:col-span-3 col-span-12 mb-8 mr-4 rounded-md shadow-lg h-[21rem] bg-[#fff]" key={i}>
                       <div className="flex items-center justify-end pr-6 pt-5">
                         <MdOutlineModeEditOutline onClick={() => {
                           setUser(user)
@@ -142,8 +144,17 @@ const TableComponent: React.FC = () => {
           </div>
         </div>
       </div>
-      {isEditing && <EditUser user={user} setIsEditing={setIsEditing} />}
-      {isCreateUserClicked && <CreateUser setIsUpdating={setIsUpdating} setIsCreateUserClicked={setIsCreateUserClicked} />}
+      <Suspense fallback={
+        <div className='fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center'>
+          <ScaleLoader />
+        </div>
+      }>
+        {isEditing && <EditUser user={user} setIsEditing={setIsEditing} />}
+        {isCreateUserClicked && (
+          <CreateUser setIsUpdating={setIsUpdating} setIsCreateUserClicked={setIsCreateUserClicked} />
+        )}
+      </Suspense>
+
     </div>
   )
 }

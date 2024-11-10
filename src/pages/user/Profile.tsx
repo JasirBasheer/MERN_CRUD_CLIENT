@@ -1,13 +1,12 @@
 import NavBar from '../../components/user/NavBar'
 import EditProfile from '../../components/user/EditProfile'
 
-const Profile = () => {
+const Profile:React.FC = () => {
   return (
-    <div className='w-full h-auto bg-slate-500'>
-    <NavBar/>
-    <EditProfile/>
-
-    </div>
+    <>
+      <NavBar />
+      <EditProfile />
+    </>
   )
 }
 

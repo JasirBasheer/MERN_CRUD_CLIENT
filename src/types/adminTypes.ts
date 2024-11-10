@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, ReactNode, SetStateAction } from 'react';
 
 
 export interface CreateUserProps {
@@ -14,9 +14,15 @@ export interface EditUserProps {
 
 export interface UserType {
   _id?: any;
+  id?: any;
   firstName: string | null;
   lastName: string | null;
   image: string | null;
   email: string | null;
   is_blocked?: boolean | null;
+}
+
+
+export interface AdminProtectedRouteProps {
+  children: ReactNode;
 }
