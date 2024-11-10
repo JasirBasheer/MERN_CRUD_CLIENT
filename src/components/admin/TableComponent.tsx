@@ -10,16 +10,17 @@ import { IoLogOut } from "react-icons/io5"
 import Cookies from 'js-cookie';
 import { useNavigate } from "react-router-dom"
 import { message } from "antd"
+import { UserType } from "../../types/adminTypes"
 
-const TableComponent = () => {
-  const [users, setUsers] = useState([])
-  const [filteredUsers, setFilteredUsers] = useState([])
-  const [isUpdating, setIsUpdating] = useState(false)
-  const [isEditing, setIsEditing] = useState(false)
-  const [isCreateUserClicked, setIsCreateUserClicked] = useState(false)
-  const [user, setUser] = useState({})
+const TableComponent: React.FC = () => {
+  const [users, setUsers] = useState<UserType[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<UserType[]>([]);
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  const [isCreateUserClicked, setIsCreateUserClicked] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [user, setUser] = useState<UserType>({} as UserType)
   const navigate = useNavigate()
-  const [searchQuery, setSearchQuery] = useState("")
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
     axios.get('/admin/get-users').then((response) => {
@@ -28,12 +29,11 @@ const TableComponent = () => {
     })
       .catch(error => {
         console.log(error.message);
-
       })
   }, [isUpdating, isEditing])
 
 
-  const handleSearch = () => {
+  const handleSearch = (): void => {
     if (searchQuery.trim() === "") {
       setFilteredUsers(users)
     } else {
@@ -45,17 +45,16 @@ const TableComponent = () => {
     }
   }
 
-  const handleDeleteUser = (id: any) => {
+  const handleDeleteUser = (id: string): void => {
     setIsUpdating((prev) => !prev);
     axios.delete(`/admin/delete-user/${id}`).then(() => {
       setIsUpdating((prev) => !prev);
       message.success('User Successfully Deleted')
-
     })
     setIsUpdating((prev) => (!prev))
-
   }
-  const handleLogout =()=>{
+
+  const handleLogout = (): void => {
     Cookies.remove('AdminAccessToken')
     Cookies.remove('AdminRefreshToken')
     message.success('Successfully Logouted')
@@ -63,48 +62,36 @@ const TableComponent = () => {
   }
 
   const handleBlockUser = (id: any, is_blocked: any) => {
-
     setIsUpdating((prev) => !prev);
-
     axios.patch(`/admin/block-user`, { id, is_blocked }).then(() => {
       setIsUpdating((prev) => !prev);
       message.success('Successfully changed Authencitation status')
     })
-    
     setIsUpdating((prev) => (!prev))
-
-
   }
-
 
   return (
     <div className='w-full flex items-center justify-center pt-15 min-h-screen h-auto bg-[rgb(97,92,116)]'>
       <div className="sm:w-[70rem]  rounded-lg sm:h-auto shadow-xl h-auto w-full mt-11 mb-20 bg-slate-50">
         <div className="w-full gap-x-10 flex items-center justify-between  px-11 h-[4rem] pt-5">
           <h1 className="text-[1rem] font-bold ">USERS</h1>
-<div className="flex gap-x-3">
-  
-          <button onClick={()=>setIsCreateUserClicked((prev)=>!prev)} className="p-3 outline-none h-[2.5rem] rounded-lg text-white text-[0.8rem] shadow-lg cursor-pointer font-bold bg-[rgb(33,33,33)] flex items-center justify-center"> <HiUserAdd className="w-[1.2rem] h-[3rem]" /> </button>
-<button onClick={handleLogout} className="p-3 outline-none h-[2.5rem] rounded-lg text-white text-[0.8rem] shadow-lg cursor-pointer font-bold bg-[rgb(33,33,33)] flex items-center justify-center"> <IoLogOut className="w-[1.2rem] h-[3rem]" /> </button>
-</div>
+          <div className="flex gap-x-3">
+            <button onClick={() => setIsCreateUserClicked((prev) => !prev)} className="p-3 outline-none h-[2.5rem] rounded-lg text-white text-[0.8rem] shadow-lg cursor-pointer font-bold bg-[rgb(33,33,33)] flex items-center justify-center"> <HiUserAdd className="w-[1.2rem] h-[3rem]" /> </button>
+            <button onClick={handleLogout} className="p-3 outline-none h-[2.5rem] rounded-lg text-white text-[0.8rem] shadow-lg cursor-pointer font-bold bg-[rgb(33,33,33)] flex items-center justify-center"> <IoLogOut className="w-[1.2rem] h-[3rem]" /> </button>
+          </div>
         </div>
         <div className="px-11">
-
-
           <div className="cursor-pointer bg-black flex my-4 items-center rounded-lg p-[1px] w-full h-[2.6rem] peer-focus:border-2 peer-focus:border-blue-500">
             <input
-            onChange={(e)=>{
-              setSearchQuery(e.target.value)
-            }}
+              onChange={(e) => {
+                setSearchQuery(e.target.value)
+              }}
               type="text"
               className="rounded-lg outline-none border-0 w-[70rem] peer"
               placeholder="Search"
             />
             <IoIosSearch onClick={handleSearch} className="text-white cursor-pointer mx-4 text-[1.4rem]" />
           </div>
-
-
-
           <div className="w-full grid grid-cols-9 h-auto ">
             {
               filteredUsers?.length > 0 ? (
@@ -139,7 +126,6 @@ const TableComponent = () => {
                             <MdBlock onClick={() => handleBlockUser(user._id, user.is_blocked)} className="hover:bg-[#1e15151f] w-[2rem]  cursor-pointer rounded-full h-[1.8rem] p-1" />
 
                           )}
-
                         <MdDelete onClick={() => {
                           handleDeleteUser(user._id)
                         }} className="hover:bg-[#1e15151f] w-[2rem] cursor-pointer rounded-full h-[1.8rem] p-1" />
@@ -151,14 +137,10 @@ const TableComponent = () => {
                 <div className="sm:w-[61rem] mb-12 h-[11rem] flex items-center justify-center ">
                   No Users Found..
                 </div>
-
               )
             }
-
-
           </div>
         </div>
-
       </div>
       {isEditing && <EditUser user={user} setIsEditing={setIsEditing} />}
       {isCreateUserClicked && <CreateUser setIsUpdating={setIsUpdating} setIsCreateUserClicked={setIsCreateUserClicked} />}

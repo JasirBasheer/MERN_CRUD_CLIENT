@@ -12,7 +12,7 @@ import google from '../../assets/google.png'
 import gitHub from '../../assets/github.png'
 
 import { message } from "antd";
-import { validateEmail, validatePassword } from '../../validation/registerValidation';
+import { validateEmail, validatePassword } from '../../utils/validations';
 import { SpinnerCircular } from 'spinners-react';
 
 
@@ -55,9 +55,8 @@ const LoginForm = () => {
     } catch (error:any) {
       if (error?.response && error?.response.status === 400) {
         setIsLoading(false)
-        if (error.response.status === 400) {
-          let errorMessage = error.response.data.error;      
-          return message.error(`${errorMessage}`);
+        if (error.response.status === 400) { 
+          return message.error(`${error.response.data.error}`);
         }         
       }
     }

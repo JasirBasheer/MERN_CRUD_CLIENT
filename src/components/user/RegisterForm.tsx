@@ -9,7 +9,7 @@ import google from '../../assets/google.png'
 import gitHub from '../../assets/github.png'
 
 import { message } from "antd";
-import { validateEmail, validateFirstName, validateLastName, validatePassword } from '../../validation/registerValidation';
+import { validateEmail, validateFirstName, validateLastName, validatePassword } from '../../utils/validations';
 import { SpinnerCircular } from 'spinners-react';
 
 const RegisterForm = () => {
